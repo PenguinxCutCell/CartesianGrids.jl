@@ -61,8 +61,7 @@ center = CartesianGrids.cell_center(grid, CartesianIndex(1, 1))
 	|   o───o───o
 	|   │   │   │
 	|   o───o───o
-	|   ↑
-    |   lc = (x_L, y_L)
+    |   
 	+────────────→ x
 ```
 
