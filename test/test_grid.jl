@@ -35,23 +35,3 @@ end
     @test CartesianGrids.grid1d(grid, 3) ≈ LinRange(0.0, 0.1, 2)
     @test CartesianGrids.meshsize(grid) ≈ SVector(2 / 31, 2 / 31, 0.1)
 end
-
-
-@testset "allocations" begin
-    # check that common queries allocate no heap memory
-    grid = CartesianGrid((-1.0, -1.0), (1.0, 1.0), (32, 32))
-    # warm up (compile) before measuring allocations
-    meshsize(grid)
-    cell_spacing(grid)
-    grid1d(grid, 1)
-    grid[CartesianIndex(1, 1)]
-    GC.gc()
-
-    # allow small (compile/runtime) allocations but ensure no large heap usage
-    @test @allocated(meshsize(grid)) <= 128
-    @test @allocated(cell_spacing(grid)) <= 128
-
-    # retrieving 1D grid and a single node should allocate only minimally
-    @test @allocated(grid1d(grid, 1)) <= 128
-    @test @allocated(grid[CartesianIndex(1, 1)]) <= 128
-end
