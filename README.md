@@ -14,9 +14,11 @@ A Julia package for uniform Cartesian grid generation and management.
 
 ## Installation
 
+After cloning the repo,
+
 ```julia
 using Pkg
-Pkg.add("CartesianGrids")
+Pkg.dev("CartesianGrids")
 ```
 
 ## Quick Example
