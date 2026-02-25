@@ -2,7 +2,7 @@ module CartesianGrids
 
 using StaticArrays
 
-export CartesianGrid, grid1d, meshsize, cell_spacing, cell_center, dimension, CartesianIndices
+export CartesianGrid, grid1d, meshsize, cell_spacing, cell_center, dimension, CartesianIndices, interior_indices
 
 """
     abstract type AbstractMesh{N,T}
@@ -85,7 +85,7 @@ _getindex(g::CartesianGrid, I::Int...) = _getindex(g, CartesianIndex(I...))
 Base.CartesianIndices(g::CartesianGrid) = CartesianIndices(size(g))
 Base.eachindex(g::CartesianGrid) = CartesianIndices(g)
 
-function interior_indices(g::CartesianGrid, P)
+function interior_indices(g::CartesianGrid, P::Int)
     N = dimension(g)
     sz = size(g)
     I = ntuple(N) do dim
