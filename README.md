@@ -2,7 +2,7 @@
 
 [![In development documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://PenguinxCutCell.github.io/CartesianGrids.jl/dev)
 ![CI](https://github.com/PenguinxCutCell/CartesianGrids.jl/workflows/CI/badge.svg)
-[![codecov](https://codecov.io/gh/PenguinxCutCell/CartesianGrids.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/PenguinxCutCell/CartesianGrids.jl)
+[![codecov](https://codecov.io/gh/PenguinxCutCell/CartesianGrids.jl/graph/badge.svg?token=Q50hXtjAKk)](https://codecov.io/gh/PenguinxCutCell/CartesianGrids.jl)
 
 A Julia package for uniform Cartesian grid generation and management.
 
