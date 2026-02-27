@@ -72,3 +72,37 @@ end
     grid4 = CartesianGrid((-1.0, -1.0, -1.0, -1.0), (1.0, 1.0, 1.0, 1.0), (32, 32, 32, 32))
     @test dimension(grid4) == 4
 end
+
+
+@testset "coverage missing" begin
+    # constructor argument length mismatch throws
+    @test_throws ArgumentError CartesianGrid((0.0,), (1.0, 1.0), (2,))
+
+    # grid1d when n == 1 should return a single-point LinRange
+    g1 = CartesianGrid((0.0, 0.0), (1.0, 2.0), (1, 3))
+    @test CartesianGrids.grid1d(g1, 1) == LinRange(0.0, 0.0, 1)
+    @test CartesianGrids.grid1d(g1, 2) ≈ LinRange(0.0, 2.0, 3)
+
+    # getindex out-of-bounds raises
+    g = CartesianGrid((-1.0, -1.0), (1.0, 1.0), (4, 4))
+    @test_throws ArgumentError g[CartesianIndex(0, 1)]
+
+    # integer varargs getindex matches CartesianIndex form
+    @test g[1, 1] ≈ g[CartesianIndex(1, 1)]
+
+    # iterate over full grid values
+    arr = collect(g)
+    @test length(arr) == prod(size(g))
+    @test arr[1] ≈ g[CartesianIndex(1, 1)]
+    @test arr[end] ≈ g[CartesianIndex(4, 4)]
+
+    # eltype returns the type of the lower-corner SVector
+    @test eltype(g) == typeof(g.lc)
+
+    # test collect! with preallocated output array
+    c = Vector{eltype(g)}(undef, length(g))
+    collect!(c, g)
+    @test length(c) == prod(size(g))
+    @test c[1] ≈ g[CartesianIndex(1, 1)]
+    @test c[end] ≈ g[CartesianIndex(4, 4)]
+end

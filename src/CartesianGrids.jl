@@ -2,7 +2,7 @@ module CartesianGrids
 
 using StaticArrays
 
-export CartesianGrid, grid1d, meshsize, cell_spacing, cell_center, dimension, CartesianIndices, interior_indices
+export CartesianGrid, grid1d, meshsize, cell_spacing, cell_center, dimension, CartesianIndices, interior_indices, collect!
 
 """
     abstract type AbstractMesh{N,T}
@@ -132,5 +132,37 @@ function cell_center(g::CartesianGrid{N}, I::CartesianIndex{N}) where {N}
     return SVector(ntuple(d -> g.lc[d] + (I[d] - 0.5) * Δ[d], N))
 end
 
+
+"""
+    collect!(dest, g)
+
+Fill a preallocated container `dest` with the node coordinates from the Cartesian grid `g`.
+This avoids allocating a new array (unlike `collect(g)`).
+
+Supported forms:
+- `collect!(v::AbstractVector, g::CartesianGrid)` fills `v` in linear (column-major) order.
+- `collect!(A::AbstractArray{<:Any,N}, g::CartesianGrid{N})` fills the N-dimensional array `A` using the same index layout as the grid.
+"""
+function collect!(dest::AbstractVector, g::CartesianGrid)
+    length(dest) == length(g) || throw(ArgumentError("dest must have length $(length(g))"))
+    i = 1
+    for I in CartesianIndices(g)
+        dest[i] = _getindex(g, I)
+        i += 1
+    end
+    return dest
+end
+
+function collect!(dest::AbstractArray, g::CartesianGrid{N, T}) where {N, T}
+    size(dest) == size(g) || throw(ArgumentError("dest must have the same size as grid"))
+    for I in CartesianIndices(g)
+        dest[I] = _getindex(g, I)
+    end
+    return dest
+end
+
+function Base.collect(g::CartesianGrid)
+    return [g[I] for I in CartesianIndices(g)]
+end
 
 end # module

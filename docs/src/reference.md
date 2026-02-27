@@ -12,6 +12,8 @@ grid1d
 meshsize
 cell_spacing
 cell_center
+interior_indices
+collect!
 ```
 
 ## Indexing and Iteration
