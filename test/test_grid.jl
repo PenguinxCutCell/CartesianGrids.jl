@@ -36,6 +36,27 @@ end
     @test CartesianGrids.meshsize(grid) ≈ SVector(2 / 31, 2 / 31, 0.1)
 end
 
+
+@testset "SpaceTimeCartesianGrid struct" begin
+    st = SpaceTimeCartesianGrid((-1.0, -1.0, 0.0), (1.0, 1.0, 0.1), (32, 32, 2))
+    @test dimension(st) == 3
+    @test size(st) == (32, 32, 2)
+    @test CartesianGrids.grid1d(st, 3) ≈ LinRange(0.0, 0.1, 2)
+    @test CartesianGrids.meshsize(st) ≈ SVector(2 / 31, 2 / 31, 0.1)
+    @test CartesianGrids.cell_spacing(st) ≈ SVector(2 / 32, 2 / 32, 0.05)
+
+    space = CartesianGrid((-1.0, -1.0), (1.0, 1.0), (32, 32))
+    st2 = SpaceTimeCartesianGrid(space, [0.0, 0.05, 0.1])
+    @test size(st2) == (32, 32, 3)
+    @test CartesianGrids.grid1d(st2, 3) ≈ LinRange(0.0, 0.1, 3)
+    @test st2[1, 1, 1] ≈ SVector(-1.0, -1.0, 0.0)
+
+    c = Vector{eltype(st2)}(undef, length(st2))
+    collect!(c, st2)
+    @test c[1] ≈ st2[CartesianIndex(1, 1, 1)]
+    @test c[end] ≈ st2[CartesianIndex(32, 32, 3)]
+end
+
 @testset "cell centers" begin
     grid = CartesianGrid((-1.0, -1.0), (1.0, 1.0), (32, 32))
     for I in CartesianGrids.CartesianIndices(grid)
